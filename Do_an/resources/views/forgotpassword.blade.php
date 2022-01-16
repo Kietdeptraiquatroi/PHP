@@ -9,7 +9,7 @@
 
     <!-- Tab icon -->
     <link rel="icon" href="./svgs/board.svg" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -24,14 +24,21 @@
 <body>
     <div class="mt-5 col-10 col-md-7 col-lg-3 text-center mx-auto">
         <div class="board">
-            <img src="svgs/1.jpg" alt="Board" />
+            <img src="svgs/logo.jpg" alt="Board" />
         </div>
-        <h1 class="fs-2 mb-3">Sign In</h1>
+        <h1 class="fs-2 mb-3">Thay đổi mật khẩu</h1>
+
 
         <form action="{{route('xl_forgot')}}" method="POST" >
             @csrf
             @if('thong_bao')
-            <span stype="color: red">{{session('thong_bao')}}</span>
+            <div class="alert alert-success">
+            {{session('thanh_cong')}}
+            </div>
+            @elseif('loi')
+            <div class="alert alert-danger">
+            {{session('loi')}}
+            </div>
             @endif
             <div class="mb-3">
                 <input type="email" class="form-control py-3" placeholder="Nhập email" name="mail" />
@@ -43,6 +50,7 @@
           Lấy lại mật khẩu
             </button>
         </form>
+        <a href="{{route('dang_nhap')}}">Trở về đăng nhập</a>
         
     </div>
 </body>

@@ -9,7 +9,7 @@
 
     <!-- Tab icon -->
     <link rel="icon" href="./svgs/board.svg" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -25,14 +25,20 @@
     <div class="mt-5 col-10 col-md-7 col-lg-3 text-center mx-auto">
 
         <div class="board">
-            <img src="svgs/1.jpg" alt="Board" />
+            <img src="svgs/logo.jpg" alt="Board" />
         </div>
-        <h1 class="fs-2">Sign Up</h1>
-        <p class="fs-2">Please fill your information</p>
+       
+        <p class="fs-2">Vui lòng nhập lại mật khẩu mới :)</p>
 
-        <form form method="POST" action="{{route('xl_them_tk')}}">
+        <form form method="POST" action="{{route('update_pass')}}">
         @csrf
+        @php
+        $token=$_GET['token'];
+        $email=$_GET['email'];
+        @endphp
             <div class="mb-3">
+                <input type="hidden" name="email" value="{{$email}}">
+                <input type="hidden" name="token" value="{{$token}}">
                 <input type="password" class="form-control py-3" placeholder="Password" name="password" />
                 @error('password')
                     <span style="color: red" >{{ $message }}</span>

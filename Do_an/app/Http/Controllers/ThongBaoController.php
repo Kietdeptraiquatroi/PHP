@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 use App\Models\Lop;
 use App\Models\TaiKhoan;
 use App\Models\ThongBao;
+use App\Models\UploadThongBao;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\ThongBaoRequest;
+use File;
+use Storage;
 
 
 class ThongBaoController extends Controller
@@ -18,23 +21,41 @@ class ThongBaoController extends Controller
         $thongBao->id_nguoi_dang=$user->id;
         $thongBao->noi_dung=$req->thong_bao;
         $thongBao->lop_id=$id;
-     
+     //dd($req->file_upload);
         if($req->file_upload==null){
            $thongBao->file=NULL;
         }else {
             if($req->has('file_upload'))
             {
-                $file=$req->file_upload;
-                $file_name=$file->getClientoriginalName();
-                $file->move(public_path('upload'),$file_name);
-                $req->merge(['file'=>$file_name]);
+                $files_upload=$req->file_upload;
+                foreach($files_upload as $file)
+                {
+                    $file_name=$file->getClientoriginalName();
+                    //dd( $file_name);
+                    $file->move(public_path('upload'),$file_name);
+                    $req->merge(['file'=>$file_name]);
+                    $file="upload/$req->file";
+                    $thongBao->save();
+                    $file_data=File::get( $file);
+                    $files=Storage::disk('google')->put($file_name,$file_data);
+                    $upload_thong_bao=new UploadThongBao;
+                    $upload_thong_bao->file= $file;
+                    $upload_thong_bao->file="upload/$req->file";
+                    $googleDrive=Storage::disk('google');
+                    $contents=collect($googleDrive->listContents('/',false))->where('name',$file_name)->first();
+                    $upload_thong_bao->path=$contents['path'];
+                    $upload_thong_bao->id_thong_bao=$thongBao->id;
+                    $upload_thong_bao->save();
+                }
+               
             }
-            $file="upload/$req->file";
-            $thongBao->file= $file;
-            $thongBao->file="upload/$req->file";
+           
+     
+          
+         // dd($contents);
         }
-            //dd( $thongBao);
-            $thongBao->save();
+           
+           
         return redirect()->back();
 
     }
@@ -45,5 +66,6 @@ class ThongBaoController extends Controller
         $thongBaoXoa->delete();
         return redirect()->back();
     }
+    
     
 }

@@ -9,7 +9,7 @@
     <!-- Tab icon -->
     <link rel="icon" href="./svgs/board.svg" />
     <link rel="stylesheet" href="{{ asset('https://fonts.googleapis.com/icon?family=Material+Icons')}}">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -118,7 +118,11 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center mb-3">
                                     <img class="avatar me-3" src="{{$ttLop->chiTietTaiKhoanGiaoVien->images}}" alt="Avatar" />
+                                    <div>
                                     <h3 class="fs-5">Teacher:{{$ttLop->chiTietTaiKhoanGiaoVien->username}}</h3>
+                                    <i>{{$tt->created_at}}</i>
+                                    </div>
+                                   
                                 </div>
                               
                             </div>
@@ -138,12 +142,18 @@
                         mb-3
                       ">
                                         <div class="d-flex align-items-center">
-                                            <img class="avatar me-3" src="" alt="Avatar" />
-                                            <h3 class="fs-6">Student</h3>
+                                        <img class="avatar me-3" src="{{$bl->chiTietTaiKhoanBL->images}}" alt="Avatar" />
+                                        <div>
+                                        <h3 class="fs-6"> <b>{{$bl->chiTietTaiKhoanBL->username}}</b> <i>{{$bl->chiTietTaiKhoanBL->created_at}}</i></h3>
+                                            <p>{{$bl->noi_dung_binh_luan}}</p>
                                         </div>
-                                        <div class="btn btn-dark text-white">&#x2716;</div>
-                                    </div>
-                                    <p>{{$bl->noi_dung_binh_luan}}</p>
+                                            
+                                        </div>
+                                        @if($bl->tai_khoan_binh_luan_id==$user->id)
+                                        <a href="{{route('xoa_binh_luan',['id'=>$bl->id])}}" class="btn btn-danger fa fa-trash" onclick="return confirm('Bạn  muốn xóa bình luận này?');"></a>
+                                    @endif
+                                      </div>
+                                  
                                 </li>
                             </ul>
                             @endif
@@ -156,7 +166,7 @@
                             <form class="d-flex align-items-center mt-4" action="{{route('them_binh_luan',['id'=>$tt->id])}}">
                                 <img class="avatar me-3" src="{{$user->images}}" alt="Avatar" />
                                 <input class="flex-grow-1 border me-2 p-2" placeholder="Write your comment..." name="noi_dung_binh_luan"/>
-                                <button type="submit" class="btn btn-primary">Gửi</button>
+                                <button type="submit" class="btn btn-primary fa fa-send">Gửi</button>
                             </form>
                         </li>
                     </ul>

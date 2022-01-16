@@ -8,17 +8,19 @@
     <title>Stream</title>
 
     <!-- Tab icon -->
-    <link rel="icon" href="./svgs/board.svg" />
-
+    <link rel="icon" href="{{asset('./svgs/board.svg') }}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
 
     <!-- Styles -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/common.css') }}" />
+    <link rel="stylesheet" href="{{ asset('css/reset.css') }}" />
+    
 </head>
 
 <body>
@@ -37,17 +39,19 @@
         <a href="#" class="logo mr-3">
             <img src="svgs/logo.svg" alt="Logo" />
         </a>
-
+       
         <nav class="d-flex align-items-center gap-3">
+        <a href="{{route('back_Main')}}"><i class="fa fa-home"></i></a>
             <a class="d-flex align-items-center text-secondary" href="#">Stream</a>
             <a class="d-flex align-items-center text-secondary" href="#">Classwork</a
         >
-        <a class="d-flex align-items-center text-secondary" href="#">People</a>
+        <a class="d-flex align-items-center text-secondary" href="{{route('people',['id'=>$ttLop->id])}}">People</a>
         </nav>
     </header>
 
     <main class="container">
         <!-- Banner -->
+        
         <section class="
           d-flex
           flex-column
@@ -59,20 +63,25 @@
           px-3
           py-4
           rounded
-        ">
-            <h1 class="banner__class">Anh Văn A2(Căn Bản)</h1>
+        " style="background-image:url({{$ttLop->background}})">
+     
+
+      
+            <h1 class="banner__class">{{$ttLop->ten_lop}}</h1>
             <div class="fs-4">
                 <span>Teacher: </span
-          ><span class="banner__teacher"> Nguyễn Văn Trường</span>
+          ><span class="banner__teacher">{{$user->username}}</span>
             </div>
             <div class="fs-4">
                 <span>Subject: </span
-          ><span class="banner__subject">Khóa Học Anh văn A1(Căn Bản)</span>
+          ><span class="banner__subject">{{$ttLop->thong_tin}}</span>
             </div>
             <div class="fs-4">
-                <span>Room: </span><span class="banner__room">0306191289</span>
+                <span>Room: </span><span class="banner__room">{{$ttLop->code}}</span>
             </div>
+
         </section>
+        
 
         <!-- Content -->
         <section class="container mt-5">
@@ -86,32 +95,48 @@
                 </div>
 
                 <div class="col col-lg-9">
+                    <form action="{{route('them_thong_bao',['id'=>$ttLop->id])}}" method="POST" enctype="multipart/form-data">
+                    @csrf
                     <div class="bg-white px-3 py-4 rounded shadow">
                         <div class="d-flex align-items-center mb-3">
-                            <img class="avatar me-3" src="svgs/6.jpg" alt="Avatar" />
+                            <img class="avatar me-3" src="{{$user->images}}" alt="Avatar" />
                             <div>Chia sẻ với lớp học của bạn</div>
                         </div>
-                        <textarea class="w-100 p-3 border mb-2" cols="30" rows="5" placeholder="Write something..."></textarea>
+                        <textarea name="thong_bao" class="w-100 p-3 border mb-2" cols="30" rows="5" placeholder="Write something..."></textarea>
                         <div class="d-flex align-items-lg-center justify-content-between">
-                            <input type="file" />
-                            <div class="btn btn-primary">Tải Lên</div>
+                            <input type="file" name="file_upload[]" multiple/>
+                           <button class="btn btn-primary">Tải lên</button>
                         </div>
                     </div>
-
+                    </form>
+               
+                    @forelse($thongBao as $tt)
                     <ul class="mt-5">
                         <li class="bg-white px-3 py-4 rounded shadow">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center mb-3">
-                                    <img class="avatar me-3" src="svgs/13.png" alt="Avatar" />
-                                    <h3 class="fs-5">Teacher: Nguyễn Văn Trường</h3>
+                                    <img class="avatar me-3" src="{{$ttLop->chiTietTaiKhoanGiaoVien->images}}" alt="Avatar" />
+                                    <div>
+                                    <h3 class="fs-5">Teacher:{{$ttLop->chiTietTaiKhoanGiaoVien->username}} </h3>
+                                    <i>{{$tt->created_at}}</i>
+                                    </div>
                                 </div>
-                                <div class="btn btn-dark text-white">&#x2716;</div>
+                                <div >
+                                <a href="{{route('xoa_thong_bao',['id'=>$tt->id])}}"class="btn btn-danger fa fa-trash" onclick="return confirm('Bạn thật sự muốn xóa thông báo này?');"></a>
+                                </div>
                             </div>
-
-                            <p class="border-bottom pb-3">Hi all my students!!</p>
-
-                            <div class="fw-bold">Comment:</div>
-
+                            <p class="border-bottom pb-3">{{$tt->noi_dung}}</p>
+                           
+                            @foreach($upload_thong_bao as $ul)
+                                    @if($ul->id_thong_bao==$tt->id)
+                                    <div class="card " style="width:400px"style="height=250px" >
+                                    <iframe src="https://drive.google.com/file/d/{{$ul->path}}/preview"  ></iframe>
+                                    </div>
+                                    @endif
+                            @endforeach
+                            <div class="fw-bold">Bình luận:</div>
+                            @forelse($binhLuan as $bl)
+                            @if($bl->thong_bao_id==$tt->id)
                             <ul class="mt-2 border-bottom">
                                 <li>
                                     <div class="
@@ -120,26 +145,40 @@
                         justify-content-between
                         mb-3
                       ">
+                    
                                         <div class="d-flex align-items-center">
-                                            <img class="avatar me-3" src="svgs/4.jpg" alt="Avatar" />
-                                            <h3 class="fs-6">Student</h3>
+                                            <img class="avatar me-3" src="{{$bl->chiTietTaiKhoanBL->images}}" alt="Avatar" />
+                                            <div class="row">
+                                            <h3 class="fs-6"><b> {{$bl->chiTietTaiKhoanBL->username}} </b> <i>{{$bl->chiTietTaiKhoanBL->created_at}}</i></h3>
+                                            <p>{{$bl->noi_dung_binh_luan}}</p>
+                                            </div>
                                         </div>
-                                        <div class="btn btn-dark text-white">&#x2716;</div>
+                                      
+                                        <a href="{{route('xoa_binh_luan',['id'=>$bl->id])}}" class="btn btn-danger fa fa-trash" onclick="return confirm('Bạn  muốn xóa bình luận này?');"></a>
                                     </div>
-                                    <p>Hi there!</p>
+                                   
                                 </li>
                             </ul>
-
-                            <form class="d-flex align-items-center mt-4">
-                                <img class="avatar me-3" src="svgs/14.jpg" alt="Avatar" />
-                                <input class="flex-grow-1 border me-2 p-2" placeholder="Write your comment..." />
-                                <button type="submit" class="btn btn-primary">Send</button>
+                            @endif
+                                        @empty
+                            <tr>
+                                <td colspan="5">Không có bình luận nào dữ liệu</td>
+                            </tr>
+                            @endforelse
+                            <form class="d-flex align-items-center mt-4" action="{{route('them_binh_luan',['id'=>$tt->id])}}">
+                                <img class="avatar me-3" src="{{$user->images}}" alt="Avatar" />
+                                <input class="flex-grow-1 border me-2 p-2" placeholder="Write your comment..." name="noi_dung_binh_luan"/>
+                                <button type="submit" class="btn btn-primary fa fa-send"> Gửi</button>
                             </form>
                         </li>
                     </ul>
+                    @empty
+
+                 @endforelse
                 </div>
             </div>
         </section>
+      
     </main>
 </body>
 

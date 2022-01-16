@@ -13,8 +13,8 @@ class BinhLuan extends Model
     use HasFactory;
     use SoftDeletes;
     protected $dates=['deleted_at'];
-    // public function chiTietTaiKhoan()
-    //     {
-    //         return $this->belongsTo('App\Models\TaiKhoan','tai_khoan_id','id');
-    //     }
+    public function chiTietTaiKhoanBL()
+        {
+            return $this->belongsTo('App\Models\TaiKhoan','tai_khoan_binh_luan_id','id');
+        }
 }

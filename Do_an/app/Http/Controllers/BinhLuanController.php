@@ -16,10 +16,16 @@ class BinhLuanController extends Controller
         $user=Auth::user();
         $binhLuan= new BinhLuan;
         $binhLuan->noi_dung_binh_luan=$req->noi_dung_binh_luan;
-        $binhLuan->tai_khoan_id=$user->id;
+        $binhLuan->tai_khoan_binh_luan_id=$user->id;
         $binhLuan->thong_bao_id=$id;
         // dd( $binhLuan);
         $binhLuan->save();
+        return redirect()->back();
+    }
+    public function xoaBinhLuan( $id)
+    {
+        $binhLuan=BinhLuan::find($id);
+        $binhLuan->delete();
         return redirect()->back();
     }
 }

@@ -21,7 +21,8 @@ class TaiKhoanSeeder extends Seeder
         $qtv->email='admin@example.com';
         $qtv->phone='0708743966';
         $qtv->loai_tk='admin';
-        $qtv->images='1.img';
+        $qtv->images='svgs/admin.jpg';
+        $qtv->token=null;
         $qtv->save();
     }
 }

@@ -17,51 +17,64 @@ class HocSinhController extends Controller
     public function xuLyVaoLop(Request $req)
     {
        $user=Auth::user();
+     
       $lop=Lop::where('code',$req->code)->get();
       if ($lop) {
         $count_lop=$lop->count();
         if($count_lop==0)
         {
-          return redirect()->back()->with('thong_bao','Lớp không tồn tại! vui lòng nhập lại');
+          return redirect()->back()->with('thong_bao','Lớp không tồn tại! vui lòng nhập lại : )');
         }else{
           foreach($lop as $lp)
           {
             $lop_id=$lp->id;
             //dd($lop_id);
             $lop_sv=LopSinhVien::where('lop_id',$lop_id)->get();
-            $count_lop_sv=$lop_sv->count();
-           // dd($count_lop_sv);
-            if($count_lop_sv>0)
+          
+           $count_lop_sv=$lop_sv->count();
+          if($count_lop_sv>0)
             {
+             
               foreach($lop_sv as $lop)
               {
                 $lop_sv_id=LopSinhVien::where('sinh_vien_id',$user->id)->get();
+              
                 $count_lop_id=$lop_sv_id->count();
                 if($count_lop_id==0)
                 {
+                                 
                   $lop_sv=new LopSinhVien;
                   $lop_sv->sinh_vien_id=$user->id;
                   $lop_sv->lop_id=$lop_id;
                   $lop_sv->save();
                   $lop_sv->delete();
-                 return redirect()->back()->with('thong_bao','Đang chờ xác nhận từ giảng viên');
-                }else{
-                  return redirect()->back()->with('thong_bao','Lớp này bạn đã tham gia! vui lòng nhập lại');
+                
+
+                 return redirect()->back()->with('thong_bao','Đang chờ xác nhận từ giảng viên :)');
+                }else{    
+                    return redirect()->back()->with('thong_bao','Lớp này đã tồn tại trông danh sách lớp của bạn! : )');               
               }
             }
-            } else{
-              $lop_sv=new LopSinhVien;
-        $lop_sv->sinh_vien_id=$user->id;
-        $lop_sv->lop_id=$lop_id;
-        $lop_sv->save();
-        $lop_sv->delete();
-       return redirect()->back()->with('thong_bao','Đang chờ xác nhận từ giảng viên'); 
-          }
+            }else{
+              $lop_da_xin_vao=LopSinhVien::onlyTrashed()->where('lop_id',$lop_id)->get();
+              $count_da_xin=$lop_da_xin_vao->count();
+             
+                  if($count_da_xin==0){
+                 
+                      $lop_sv=new LopSinhVien;
+                    $lop_sv->sinh_vien_id=$user->id;
+                    $lop_sv->lop_id=$lop_id;
+                    $lop_sv->save();
+                    $lop_sv->delete();
+                     return redirect()->back()->with('thong_bao','Đang chờ xác nhận từ giảng viên : )');   
+                }else{
+          return redirect()->back()->with('thong_bao','Lớp này đang trong danh sách chờ của giảng viên :)');
         }
+      }
         # code...
       }
     }
-
+  }
       
 
     }
@@ -80,8 +93,9 @@ class HocSinhController extends Controller
     }
     public function roiLop($id)
     {
-     
     $lop_vs=LopSinhVien::find($id);
+    $dsbinhLuan=BinhLuan::where('tai_khoan_binh_luan_id', $lop_vs->sinh_vien_id);
+    $dsbinhLuan->delete();
    // dd($lop_vs);
     $lop_vs->forceDelete();
       return redirect()->back();

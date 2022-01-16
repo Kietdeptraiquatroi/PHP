@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\Auth;
 
 class CapNhatController extends Controller
 {
-    function fromCapNhat(Request $request)
+    function fromCapNhat(Request $request ,$id)
     {
-    $value = $request->session()->get('username');
-    $taiKhoan = TaiKhoan::where('username',$value )->get();
+   
+    $taiKhoan = TaiKhoan::where('id',$id)->get();
     return view('updateaccount',compact('taiKhoan'));
     } 
     function backMain(Request $request)
@@ -32,11 +32,10 @@ class CapNhatController extends Controller
     
     
     
-    function capNhat(Request $req){
+    function capNhat(Request $req,$id){
         $user = Auth::user();
 
-        $value = $req->session()->get('username');
-        $taiKhoan = TaiKhoan::where('username',$value )->get()->first();
+        $taiKhoan = TaiKhoan::where('id',$id )->get()->first();
         $taiKhoan->ho_ten=$req->ho_ten;
         $taiKhoan->email=$req->email;
         $taiKhoan->phone=$req->phone;

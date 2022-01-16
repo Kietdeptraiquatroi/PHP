@@ -8,6 +8,10 @@ use App\Models\LopSinhVien;
 use App\Models\ThongBao;
 use App\Models\TaiKhoan;
 use App\Models\BinhLuan;
+use App\Models\UploadThongBao;
+
+use File;
+use Storage;
 use Illuminate\Support\Facades\Auth;
 class GiaoVienController extends Controller
 {
@@ -137,8 +141,8 @@ class GiaoVienController extends Controller
              $ttLop=Lop::find($id);
              $thongBao=ThongBao::where('lop_id',$id)->get();
            $binhLuan=BinhLuan::all();
-           // dd($thongBao);
-           return view('stream',compact('ttLop','user','thongBao','binhLuan'));
+          $upload_thong_bao=UploadThongBao::all();
+           return view('stream',compact('ttLop','user','thongBao','binhLuan','upload_thong_bao'));
         }
 
 

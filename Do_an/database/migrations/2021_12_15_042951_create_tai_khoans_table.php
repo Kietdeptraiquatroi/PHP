@@ -22,6 +22,7 @@ class CreateTaiKhoansTable extends Migration
             $table->integer('phone');
             $table->string('loai_tk');
             $table->string('images');
+            $table->string('token');
             $table->timestamps();
             $table->softDeletes();
         });

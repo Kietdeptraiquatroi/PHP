@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use App\Models\TaiKhoan;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\DangNhapRequest;
 class DangNhapController extends Controller
@@ -31,7 +32,7 @@ class DangNhapController extends Controller
             }
             if($user->loai_tk=="Học viên")
             {
-                 return redirect()->route('trang_chu_hv');
+                 return redirect()->route('hoc_vien');
             }
            
         }
@@ -45,4 +46,5 @@ class DangNhapController extends Controller
        Auth::logout();
        return redirect()->route('dang_nhap');
     }
+    
 }

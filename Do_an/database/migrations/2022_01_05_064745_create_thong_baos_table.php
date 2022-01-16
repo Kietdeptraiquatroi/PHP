@@ -18,8 +18,7 @@ class CreateThongBaosTable extends Migration
             $table->unsignedBigInteger('id_nguoi_dang');
             $table->string('noi_dung');
             $table->unsignedBigInteger('lop_id');
-            $table->foreign('lop_id')->references('id')->on('lops')->onDelete('cascade');;
-            $table->string('file')->NULL;
+            $table->foreign('lop_id')->references('id')->on('lops')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
